@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
     const estado = document.getElementById("estado");
     const contenedor = document.getElementById("contenedor-escena");
@@ -17,26 +16,29 @@ document.addEventListener("DOMContentLoaded", () => {
         1:  { nombre: "Evolución de la educación", archivo: "./imagen1/imagen1/Imagen1.mind", plantilla: "contenidoImagen1" },
         2:  { nombre: "Reflexión educativa", archivo: "./imagen1/imagen2/Imagen2.mind", plantilla: "contenidoImagen2" },
         3:  { nombre: "Diálogo en el tiempo", archivo: "./imagen1/imagen3/Imagen3.mind", plantilla: "contenidoImagen3" },
-        4:  { nombre: "Fe y razón", archivo: "./imagen1/imagen4/Imagen4.mind", plantilla: "contenidoImagen4" },
-        5:  { nombre: "Renacimiento", archivo: "./imagen1/imagen5/Imagen5.mind", plantilla: "contenidoImagen5" },
-        6:  { nombre: "La imprenta", archivo: "./imagen1/imagen6/Imagen6.mind", plantilla: "contenidoImagen6" },
-        7:  { nombre: "La Ilustración", archivo: "./imagen1/imagen7/Imagen7.mind", plantilla: "contenidoImagen7" },
-        8:  { nombre: "Rousseau", archivo: "./imagen1/imagen8/Imagen8.mind", plantilla: "contenidoImagen8" },
-        9:  { nombre: "Locke", archivo: "./imagen1/imagen9/Imagen9.mind", plantilla: "contenidoImagen9" },
-        10: { nombre: "Tabla rasa", archivo: "./imagen1/imagen10/Imagen10.mind", plantilla: "contenidoImagen10" },
-        11: { nombre: "Kant", archivo: "./imagen1/imagen11/Imagen11.mind", plantilla: "contenidoImagen11" },
-        12: { nombre: "Dewey", archivo: "./imagen1/imagen12/Imagen12.mind", plantilla: "contenidoImagen12" },
-        13: { nombre: "Montessori", archivo: "./imagen1/imagen13/Imagen13.mind", plantilla: "contenidoImagen13" },
-        14: { nombre: "Piaget", archivo: "./imagen1/imagen14/Imagen14.mind", plantilla: "contenidoImagen14" },
-        15: { nombre: "Etapas del desarrollo", archivo: "./imagen1/imagen15/Imagen15.mind", plantilla: "contenidoImagen15" },
-        16: { nombre: "Legado educativo", archivo: "./imagen1/imagen16/Imagen16.mind", plantilla: "contenidoImagen16" },
-        17: { nombre: "Educación actual", archivo: "./imagen1/imagen17/Imagen17.mind", plantilla: "contenidoImagen17" },
-        18: { nombre: "Reflexión final", archivo: "./imagen1/imagen18/Imagen18.mind", plantilla: "contenidoImagen18" },
-        19: { nombre: "Conclusión", archivo: "./imagen1/imagen19/Imagen19.mind", plantilla: "contenidoImagen19" },
-        20: { nombre: "Despedida", archivo: "./imagen1/imagen20/Imagen20.mind", plantilla: "contenidoImagen20" }
+        4:  { nombre: "Fe y razón", archivo: "./imagen1/imagen4/imagen4.mind", plantilla: "contenidoImagen4" },
+        5:  { nombre: "Renacimiento", archivo: "./imagen1/imagen5/imagen5.mind", plantilla: "contenidoImagen5" },
+        6:  { nombre: "La imprenta", archivo: "./imagen1/imagen6/imagen6.mind", plantilla: "contenidoImagen6" },
+        7:  { nombre: "La Ilustración", archivo: "./imagen1/imagen7/imagen7.mind", plantilla: "contenidoImagen7" },
+        8:  { nombre: "Rousseau", archivo: "./imagen1/imagen8/imagen8.mind", plantilla: "contenidoImagen8" },
+        9:  { nombre: "Locke", archivo: "./imagen1/imagen9/imagen9.mind", plantilla: "contenidoImagen9" },
+        10: { nombre: "Tabla rasa", archivo: "./imagen1/imagen10/imagen10.mind", plantilla: "contenidoImagen10" },
+        11: { nombre: "Kant", archivo: "./imagen1/imagen11/imagen11.mind", plantilla: "contenidoImagen11" },
+        12: { nombre: "Dewey", archivo: "./imagen1/imagen12/imagen12.mind", plantilla: "contenidoImagen12" },
+        13: { nombre: "Montessori", archivo: "./imagen1/imagen13/imagen13.mind", plantilla: "contenidoImagen13" },
+        14: { nombre: "Piaget", archivo: "./imagen1/imagen14/imagen14.mind", plantilla: "contenidoImagen14" },
+        15: { nombre: "Etapas del desarrollo", archivo: "./imagen1/imagen15/imagen15.mind", plantilla: "contenidoImagen15" },
+        16: { nombre: "Legado educativo", archivo: "./imagen1/imagen16/imagen16.mind", plantilla: "contenidoImagen16" },
+        17: { nombre: "Educación actual", archivo: "./imagen1/imagen17/imagen17.mind", plantilla: "contenidoImagen17" },
+        18: { nombre: "Reflexión final", archivo: "./imagen1/imagen18/imagen18.mind", plantilla: "contenidoImagen18" },
+        19: { nombre: "Conclusión", archivo: "./imagen1/imagen19/imagen19.mind", plantilla: "contenidoImagen19" },
+        20: { nombre: "Despedida", archivo: "./imagen1/imagen20/imagen20.mind", plantilla: "contenidoImagen20" }
     };
 
-    // Contenido básico para las imágenes que no tengan plantilla.
+    // =========================================
+    // DESCRIPCIONES DE LAS IMÁGENES
+    // =========================================
+
     const descripciones = {
         4: "La fe y la razón se complementan en la búsqueda de la verdad.",
         5: "El Renacimiento impulsó el humanismo y el interés por el conocimiento.",
@@ -57,11 +59,16 @@ document.addEventListener("DOMContentLoaded", () => {
         20: "Gracias por acompañarnos en este recorrido por la filosofía educativa."
     };
 
+    // =========================================
+    // VARIABLES GENERALES
+    // =========================================
+
     let escenaActual = null;
     let sistemaActual = null;
     let numeroActual = 0;
     let generacion = 0;
     let temporizadores = [];
+    let temporizadorInicio = null;
 
     // =========================================
     // UTILIDADES
@@ -78,6 +85,13 @@ document.addEventListener("DOMContentLoaded", () => {
         temporizadores = [];
     }
 
+    function cancelarTemporizadorInicio() {
+        if (temporizadorInicio !== null) {
+            clearTimeout(temporizadorInicio);
+            temporizadorInicio = null;
+        }
+    }
+
     function elemento(id) {
         return escenaActual
             ? escenaActual.querySelector("#" + id)
@@ -86,13 +100,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function visible(id, valor) {
         const nodo = elemento(id);
-        if (nodo) nodo.setAttribute("visible", valor);
+
+        if (nodo) {
+            nodo.setAttribute("visible", valor);
+        }
     }
 
     function cambiarTexto(id, texto) {
         const nodo = elemento(id);
-        if (nodo) nodo.setAttribute("value", texto);
+
+        if (nodo) {
+            nodo.setAttribute("value", texto);
+        }
     }
+
+    function establecerEstado(mensaje, color = "#475569") {
+        estado.textContent = mensaje;
+        estado.style.color = color;
+    }
+
+    // =========================================
+    // REINICIAR CONTENIDO ANIMADO
+    // =========================================
 
     function reiniciarContenido() {
         limpiarTemporizadores();
@@ -113,9 +142,11 @@ document.addEventListener("DOMContentLoaded", () => {
             "libroDialogo3"
         ].forEach(id => visible(id, false));
 
-        ["textoMensaje", "textoPregunta", "textoRespuesta"].forEach(id => {
-            cambiarTexto(id, "");
-        });
+        [
+            "textoMensaje",
+            "textoPregunta",
+            "textoRespuesta"
+        ].forEach(id => cambiarTexto(id, ""));
 
         if (escenaActual) {
             escenaActual.querySelectorAll(".nota").forEach(nota => {
@@ -137,32 +168,43 @@ document.addEventListener("DOMContentLoaded", () => {
             contenidoImagen3: "contenidoDialogo"
         };
 
-        // Recuperar los tres contenidos que ya existen en el HTML.
-        Object.entries(contenidosOriginales).forEach(([idPlantilla, idContenido]) => {
-            if (document.getElementById(idPlantilla)) return;
+        // Recuperar los tres contenidos originales del HTML.
+        Object.entries(contenidosOriginales).forEach(
+            ([idPlantilla, idContenido]) => {
+                if (document.getElementById(idPlantilla)) {
+                    return;
+                }
 
-            const contenido = escenaPlantilla
-                ? escenaPlantilla.querySelector("#" + idContenido)
-                : document.getElementById(idContenido);
+                const contenido = escenaPlantilla
+                    ? escenaPlantilla.querySelector("#" + idContenido)
+                    : document.getElementById(idContenido);
 
-            if (!contenido) {
-                console.warn("No se encontró el contenido:", idContenido);
+                if (!contenido) {
+                    console.warn(
+                        "No se encontró el contenido:",
+                        idContenido
+                    );
+                    return;
+                }
+
+                const plantilla = document.createElement("template");
+                plantilla.id = idPlantilla;
+
+                plantilla.content.appendChild(
+                    contenido.cloneNode(true)
+                );
+
+                document.body.appendChild(plantilla);
+            }
+        );
+
+        // Crear las plantillas sencillas para las imágenes 4 a 20.
+        Object.entries(configuraciones).forEach(([numero, config]) => {
+            if (document.getElementById(config.plantilla)) {
                 return;
             }
 
             const plantilla = document.createElement("template");
-            plantilla.id = idPlantilla;
-            plantilla.content.appendChild(contenido.cloneNode(true));
-            document.body.appendChild(plantilla);
-        });
-
-        // Crear plantillas sencillas para las imágenes 4 a 20
-        // únicamente cuando todavía no existan en el HTML.
-        Object.entries(configuraciones).forEach(([numero, config]) => {
-            if (document.getElementById(config.plantilla)) return;
-
-            const plantilla = document.createElement("template");
-
             plantilla.id = config.plantilla;
 
             const titulo = document.createElement("a-text");
@@ -190,7 +232,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.body.appendChild(plantilla);
         });
 
-        // La escena original solo se usa para obtener los contenidos.
+        // Ocultar el contenedor original sin eliminar sus contenidos.
         if (escenaPlantilla) {
             escenaPlantilla.style.display = "none";
         }
@@ -209,6 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Buscaban formar el carácter, la razón y la virtud.\n" +
                     "Se estudiaban filosofía, retórica, política y gimnasia."
             },
+
             libroMedia: {
                 titulo: "⛪ Edad Media",
                 texto:
@@ -216,6 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Monasterios y catedrales fueron centros de conocimiento.\n" +
                     "Se enseñaban latín, teología y escritura."
             },
+
             libroModerna: {
                 titulo: "🏫 Actualidad",
                 texto:
@@ -226,13 +270,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function mostrar(clave) {
             const datos = info[clave];
+
             if (!datos) return;
 
             limpiarTemporizadores();
 
             visible("cajaInfo", true);
             visible("textoInfo", true);
-            cambiarTexto("textoInfo", datos.titulo + "\n\n" + datos.texto);
+
+            cambiarTexto(
+                "textoInfo",
+                datos.titulo + "\n\n" + datos.texto
+            );
 
             programar(() => {
                 visible("cajaInfo", false);
@@ -242,7 +291,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         Object.keys(info).forEach(id => {
             const libro = elemento(id);
-            if (!libro || libro.dataset.eventoRegistrado === "true") return;
+
+            if (
+                !libro ||
+                libro.dataset.eventoRegistrado === "true"
+            ) {
+                return;
+            }
 
             libro.classList.add("clickeable");
             libro.dataset.eventoRegistrado = "true";
@@ -265,7 +320,10 @@ document.addEventListener("DOMContentLoaded", () => {
             if (numeroActual !== 2) return;
 
             if (indice < texto.length) {
-                cambiarTexto("textoMensaje", texto.substring(0, indice + 1));
+                cambiarTexto(
+                    "textoMensaje",
+                    texto.substring(0, indice + 1)
+                );
 
                 programar(() => {
                     escribirTexto(texto, indice + 1, alTerminar);
@@ -282,6 +340,8 @@ document.addEventListener("DOMContentLoaded", () => {
             reiniciarContenido();
 
             programar(() => {
+                if (numeroActual !== 2) return;
+
                 visible("bocadillo", true);
                 visible("textoMensaje", true);
 
@@ -326,13 +386,21 @@ document.addEventListener("DOMContentLoaded", () => {
         let animacionActiva = false;
 
         function escribirTexto(texto, indice, destino, alTerminar) {
-            if (numeroActual !== 3) return;
+            if (numeroActual !== 3 || !destino) return;
 
             if (indice < texto.length) {
-                destino.setAttribute("value", texto.substring(0, indice + 1));
+                destino.setAttribute(
+                    "value",
+                    texto.substring(0, indice + 1)
+                );
 
                 programar(() => {
-                    escribirTexto(texto, indice + 1, destino, alTerminar);
+                    escribirTexto(
+                        texto,
+                        indice + 1,
+                        destino,
+                        alTerminar
+                    );
                 }, 40);
             } else if (alTerminar) {
                 alTerminar();
@@ -349,37 +417,58 @@ document.addEventListener("DOMContentLoaded", () => {
             const textoRespuesta = elemento("textoRespuesta");
 
             if (!textoPregunta || !textoRespuesta) {
-                estado.textContent =
-                    "⚠️ La plantilla 3 necesita textoPregunta y textoRespuesta.";
+                establecerEstado(
+                    "⚠️ La plantilla 3 necesita textoPregunta y textoRespuesta.",
+                    "#dc2626"
+                );
                 return;
             }
 
             programar(() => {
+                if (numeroActual !== 3) return;
+
                 visible("bocadilloPregunta", true);
                 visible("textoPregunta", true);
 
-                escribirTexto(pregunta, 0, textoPregunta, () => {
-                    programar(() => {
-                        visible("bocadilloRespuesta", true);
-                        visible("textoRespuesta", true);
+                escribirTexto(
+                    pregunta,
+                    0,
+                    textoPregunta,
+                    () => {
+                        programar(() => {
+                            if (numeroActual !== 3) return;
 
-                        escribirTexto(respuesta, 0, textoRespuesta, () => {
-                            programar(() => {
-                                [
-                                    "libroDialogo1",
-                                    "libroDialogo2",
-                                    "libroDialogo3"
-                                ].forEach((id, indice) => {
-                                    programar(() => visible(id, true), indice * 250);
-                                });
-                            }, 600);
+                            visible("bocadilloRespuesta", true);
+                            visible("textoRespuesta", true);
 
-                            programar(() => {
-                                visible("mensajeFinalDialogo", true);
-                            }, 2000);
-                        });
-                    }, 800);
-                });
+                            escribirTexto(
+                                respuesta,
+                                0,
+                                textoRespuesta,
+                                () => {
+                                    programar(() => {
+                                        [
+                                            "libroDialogo1",
+                                            "libroDialogo2",
+                                            "libroDialogo3"
+                                        ].forEach((id, indice) => {
+                                            programar(() => {
+                                                visible(id, true);
+                                            }, indice * 250);
+                                        });
+                                    }, 600);
+
+                                    programar(() => {
+                                        visible(
+                                            "mensajeFinalDialogo",
+                                            true
+                                        );
+                                    }, 2000);
+                                }
+                            );
+                        }, 800);
+                    }
+                );
             }, 700);
         }
 
@@ -397,22 +486,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function detenerEscenaActual() {
         limpiarTemporizadores();
+        cancelarTemporizadorInicio();
+
         window.reiniciarAnimacionActual = null;
 
         const escenaAnterior = escenaActual;
-        const sistemaAnterior = sistemaActual;
+
+        // Obtener el sistema directamente de la escena.
+        // Así también se intenta detener si todavía no se guardó
+        // en sistemaActual.
+        const sistemaAnterior =
+            sistemaActual ||
+            (
+                escenaAnterior &&
+                escenaAnterior.systems
+                    ? escenaAnterior.systems["mindar-image-system"]
+                    : null
+            );
 
         escenaActual = null;
         sistemaActual = null;
 
-        if (escenaAnterior && sistemaAnterior) {
+        if (
+            sistemaAnterior &&
+            typeof sistemaAnterior.stop === "function"
+        ) {
             try {
                 await sistemaAnterior.stop();
             } catch (error) {
-                console.warn("No se pudo detener la cámara anterior:", error);
+                console.warn(
+                    "No se pudo detener MindAR:",
+                    error
+                );
             }
         }
 
+        // Quitar la escena anterior después de detener MindAR.
+        if (escenaAnterior && escenaAnterior.parentNode) {
+            escenaAnterior.parentNode.removeChild(escenaAnterior);
+        }
+
+        // Limpiar cualquier resto dentro del contenedor.
         contenedor.replaceChildren();
     }
 
@@ -424,13 +538,25 @@ document.addEventListener("DOMContentLoaded", () => {
         numero = Number(numero);
 
         const config = configuraciones[numero];
-        if (!config) return;
 
+        if (!config) {
+            establecerEstado(
+                "❌ No se encontró la configuración de esa imagen.",
+                "#dc2626"
+            );
+            return;
+        }
+
+        // Identificador para impedir que una carga anterior
+        // cambie el estado de la imagen que se acaba de seleccionar.
         const miGeneracion = ++generacion;
+
         numeroActual = numero;
 
-        estado.textContent = "⏳ Cargando " + config.nombre + "...";
-        estado.style.color = "#475569";
+        establecerEstado(
+            "⏳ Preparando " + config.nombre + "...",
+            "#475569"
+        );
 
         await detenerEscenaActual();
 
@@ -439,49 +565,137 @@ document.addEventListener("DOMContentLoaded", () => {
         const plantilla = document.getElementById(config.plantilla);
 
         if (!plantilla) {
-            estado.textContent = "❌ No existe la plantilla " + config.plantilla;
+            establecerEstado(
+                "❌ No existe la plantilla " + config.plantilla,
+                "#dc2626"
+            );
             return;
         }
+
+        // =====================================
+        // CREAR LA ESCENA A-FRAME
+        // =====================================
 
         const escena = document.createElement("a-scene");
 
         escena.setAttribute(
             "mindar-image",
-            `imageTargetSrc: ${config.archivo}; autoStart: true; uiLoading: yes; uiScanning: yes; maxTrack: 1;`
+            "imageTargetSrc: " + config.archivo +
+            "; autoStart: true" +
+            "; uiLoading: yes" +
+            "; uiScanning: yes" +
+            "; maxTrack: 1;"
         );
 
         escena.setAttribute("embedded", "");
         escena.setAttribute("color-space", "sRGB");
-        escena.setAttribute("renderer", "colorManagement: true");
-        escena.setAttribute("vr-mode-ui", "enabled: false");
+
+        escena.setAttribute(
+            "renderer",
+            "colorManagement: true"
+        );
+
+        escena.setAttribute(
+            "vr-mode-ui",
+            "enabled: false"
+        );
+
         escena.setAttribute(
             "device-orientation-permission-ui",
             "enabled: false"
         );
 
-        const marcador = document.createElement("a-entity");
-        marcador.setAttribute("id", "marcadorActivo");
-        marcador.setAttribute("mindar-image-target", "targetIndex: 0");
+        // =====================================
+        // CREAR EL MARCADOR
+        // =====================================
 
-        marcador.appendChild(plantilla.content.cloneNode(true));
+        const marcador = document.createElement("a-entity");
+
+        marcador.setAttribute("id", "marcadorActivo");
+        marcador.setAttribute(
+            "mindar-image-target",
+            "targetIndex: 0"
+        );
+
+        marcador.appendChild(
+            plantilla.content.cloneNode(true)
+        );
+
         escena.appendChild(marcador);
 
+        // =====================================
+        // CREAR LA CÁMARA
+        // =====================================
+
         const camara = document.createElement("a-camera");
+
         camara.setAttribute("position", "0 0 0");
-        camara.setAttribute("look-controls", "enabled: false");
-        camara.setAttribute("cursor", "rayOrigin: mouse");
-        camara.setAttribute("raycaster", "objects: .clickeable");
+
+        camara.setAttribute(
+            "look-controls",
+            "enabled: false"
+        );
+
+        camara.setAttribute(
+            "cursor",
+            "rayOrigin: mouse"
+        );
+
+        camara.setAttribute(
+            "raycaster",
+            "objects: .clickeable"
+        );
 
         escena.appendChild(camara);
 
-        escenaActual = escena;
-        contenedor.appendChild(escena);
+        // =====================================
+        // EVENTOS DE MINDAR
+        // Se registran ANTES de insertar la escena.
+        // =====================================
+
+        escena.addEventListener("arReady", () => {
+            if (miGeneracion !== generacion) return;
+
+            cancelarTemporizadorInicio();
+
+            sistemaActual =
+                escena.systems["mindar-image-system"] || null;
+
+            establecerEstado(
+                "📷 Cámara activa. Apunta hacia la imagen de " +
+                config.nombre + ".",
+                "#15803d"
+            );
+
+            console.log(
+                "MindAR inició correctamente:",
+                config.nombre
+            );
+        });
+
+        escena.addEventListener("arError", (evento) => {
+            if (miGeneracion !== generacion) return;
+
+            cancelarTemporizadorInicio();
+
+            console.error(
+                "Error al iniciar la cámara con MindAR:",
+                evento
+            );
+
+            establecerEstado(
+                "❌ No se pudo iniciar la cámara. Revisa los permisos, el navegador y el archivo .mind.",
+                "#dc2626"
+            );
+        });
 
         marcador.addEventListener("targetFound", () => {
             if (miGeneracion !== generacion) return;
 
-            estado.textContent = "✅ Imagen detectada: " + config.nombre;
-            estado.style.color = "#15803d";
+            establecerEstado(
+                "✅ Imagen detectada: " + config.nombre,
+                "#15803d"
+            );
 
             if (numero === 1) configurarImagen1();
             if (numero === 2) configurarImagen2();
@@ -493,35 +707,159 @@ document.addEventListener("DOMContentLoaded", () => {
 
             limpiarTemporizadores();
 
-            estado.textContent =
-                "🔍 Apunta la cámara hacia la imagen de " + config.nombre + ".";
-            estado.style.color = "#475569";
+            establecerEstado(
+                "🔍 Apunta la cámara hacia la imagen de " +
+                config.nombre + ".",
+                "#475569"
+            );
         });
 
+        // Detectar errores de carga de la escena.
+        escena.addEventListener("error", (evento) => {
+            if (miGeneracion !== generacion) return;
+
+            console.error(
+                "Error al cargar la escena A-Frame:",
+                evento
+            );
+        });
+
+        // =====================================
+        // INSERTAR LA ESCENA
+        // =====================================
+
+        escenaActual = escena;
+        contenedor.replaceChildren(escena);
+
+        // Si MindAR no confirma su inicio después de un tiempo,
+        // mostrar un mensaje en lugar de quedarse cargando sin fin.
+        temporizadorInicio = setTimeout(() => {
+            if (miGeneracion !== generacion) return;
+
+            const sistema =
+                escena.systems["mindar-image-system"];
+
+            if (!sistema) {
+                establecerEstado(
+                    "❌ MindAR no se inicializó. Comprueba que las librerías estén cargadas.",
+                    "#dc2626"
+                );
+
+                console.error(
+                    "No se encontró mindar-image-system. " +
+                    "Comprueba las etiquetas script del HTML."
+                );
+
+                return;
+            }
+
+            establecerEstado(
+                "⏳ MindAR sigue iniciando. Comprueba los permisos de cámara y la conexión.",
+                "#b45309"
+            );
+
+            console.warn(
+                "MindAR tardó más de lo esperado en iniciar:",
+                config.nombre
+            );
+        }, 15000);
+
+        // =====================================
+        // ESPERAR LA CARGA DE A-FRAME
+        // =====================================
+
         try {
-            await new Promise((resolve, reject) => {
-                if (escena.hasLoaded) {
-                    resolve();
-                    return;
-                }
+            if (escena.hasLoaded) {
+                console.log(
+                    "La escena de A-Frame ya estaba cargada."
+                );
+            } else {
+                await new Promise((resolve, reject) => {
+                    const alCargar = () => {
+                        limpiarEventos();
+                        resolve();
+                    };
 
-                escena.addEventListener("loaded", resolve, { once: true });
+                    const alError = (evento) => {
+                        limpiarEventos();
+                        reject(
+                            evento instanceof Error
+                                ? evento
+                                : new Error(
+                                    "No se pudo cargar la escena de A-Frame."
+                                )
+                        );
+                    };
 
-                escena.addEventListener("error", reject, { once: true });
-            });
+                    function limpiarEventos() {
+                        escena.removeEventListener(
+                            "loaded",
+                            alCargar
+                        );
+
+                        escena.removeEventListener(
+                            "error",
+                            alError
+                        );
+                    }
+
+                    escena.addEventListener(
+                        "loaded",
+                        alCargar,
+                        { once: true }
+                    );
+
+                    escena.addEventListener(
+                        "error",
+                        alError,
+                        { once: true }
+                    );
+
+                    // Evitar esperar indefinidamente por el evento.
+                    if (escena.hasLoaded) {
+                        limpiarEventos();
+                        resolve();
+                    }
+                });
+            }
 
             if (miGeneracion !== generacion) return;
 
-            sistemaActual = escena.systems["mindar-image-system"] || null;
+            sistemaActual =
+                escena.systems["mindar-image-system"] || null;
 
-            estado.textContent =
-                "📷 Cámara preparada. Muestra la imagen de " + config.nombre + ".";
+            if (!sistemaActual) {
+                console.error(
+                    "MindAR no está disponible en esta escena. " +
+                    "Verifica la librería mindar-image-aframe."
+                );
+
+                establecerEstado(
+                    "❌ No se encontró el sistema de MindAR. Revisa el HTML y las librerías.",
+                    "#dc2626"
+                );
+
+                cancelarTemporizadorInicio();
+                return;
+            }
+
+            console.log(
+                "A-Frame cargado. Esperando el inicio de MindAR..."
+            );
+
         } catch (error) {
-            console.error("Error al inicializar MindAR:", error);
+            console.error(
+                "Error al inicializar la escena:",
+                error
+            );
+
+            cancelarTemporizadorInicio();
 
             if (miGeneracion === generacion) {
-                estado.textContent =
-                    "❌ No se pudo iniciar la escena. Revisa la cámara y el archivo .mind.";
+                establecerEstado(
+                    "❌ No se pudo cargar la escena. Revisa la consola y las rutas de los archivos.",
+                    "#dc2626"
+                );
             }
         }
     }
@@ -535,7 +873,10 @@ document.addEventListener("DOMContentLoaded", () => {
     botones.forEach(boton => {
         boton.addEventListener("click", () => {
             botones.forEach(otro => {
-                otro.classList.toggle("seleccionado", otro === boton);
+                otro.classList.toggle(
+                    "seleccionado",
+                    otro === boton
+                );
             });
 
             cargarImagen(boton.dataset.imagen);
@@ -562,14 +903,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // =========================================
-    // REINICIAR
+    // BOTÓN REINICIAR
     // =========================================
 
     const botonReiniciar = document.getElementById("btnReiniciar");
 
     if (botonReiniciar) {
         botonReiniciar.addEventListener("click", () => {
-            if (typeof window.reiniciarAnimacionActual === "function") {
+            if (
+                typeof window.reiniciarAnimacionActual === "function"
+            ) {
                 window.reiniciarAnimacionActual();
             } else {
                 cargarImagen(numeroActual || 1);
@@ -577,31 +920,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Iniciar con la imagen 1.
+    // =========================================
+    // INICIAR CON LA IMAGEN 1
+    // =========================================
+
     cargarImagen(1);
 });
-
-  // Crear plantillas a partir del contenido que ya existe en el HTML.
-    const escenaPlantilla = document.getElementById("escenaPlantilla");
-
-    const contenidosOriginales = {
-        contenidoImagen1: "contenidoAntiguedad",
-        contenidoImagen2: "contenidoReflexion",
-        contenidoImagen3: "contenidoDialogo"
-    };
-
-    Object.entries(contenidosOriginales).forEach(([idPlantilla, idContenido]) => {
-        const contenido = escenaPlantilla?.querySelector("#" + idContenido);
-
-        if (contenido && !document.getElementById(idPlantilla)) {
-            const plantilla = document.createElement("template");
-            plantilla.id = idPlantilla;
-            plantilla.content.appendChild(contenido.cloneNode(true));
-            document.body.appendChild(plantilla);
-        }
-    });
-
-    // Ocultar la escena original: solo se usará como fuente.
-    if (escenaPlantilla) {
-        escenaPlantilla.style.display = "none";
-    }
